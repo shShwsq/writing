@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      # OpenAI 兼容接口（DeepSeek 等）
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.deepseek.com/v1}
+      MODEL_NAME: ${MODEL_NAME:-deepseek-chat}
+      # 守门人保管的密钥：游戏通关奖励。
+      # 配置为 tools/crypt.py 中的 KEY，获胜者即可用它解密日记。
+      GUARD_SECRET: ${GUARD_SECRET}
+      # 限流（每 IP 每分钟次数）
+      CHAT_RATE_LIMIT: ${CHAT_RATE_LIMIT:-10}
+      CLAIM_RATE_LIMIT: ${CLAIM_RATE_LIMIT:-20}
+      # 工作量证明难度（sha256 前导十六进制 0 的个数，4≈浏览器零点几秒）
+      POW_DIFFICULTY: ${POW_DIFFICULTY:-4}
+    volumes:
+      # 仅记录通关者姓名（不记录对话内容）
+      - ./data:/app/data
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"

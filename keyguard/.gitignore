@@ -1,0 +1,18 @@
+# 环境变量与密钥
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node / 前端构建
+node_modules/
+dist/
+
+# 运行数据（通关记录）
+data/
+
+# IDE
+.idea/
+.vscode/
